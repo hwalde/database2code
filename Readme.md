@@ -24,7 +24,7 @@ You can use it either as command line program or use the PHP API.
 Use [Composer](https://getcomposer.org/) to download and install Database2Code. 
 
 ```bash
-$ composer require Database2Code/Database2Code
+$ composer require hwalde/database2code
 ```
 
 ## Usage
