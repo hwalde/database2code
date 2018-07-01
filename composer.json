@@ -1,0 +1,32 @@
+{
+  "name": "hwalde/database2code",
+  "description": "",
+  "license": "BSD-3-Clause",
+  "bin": [
+    "database2code"
+  ],
+  "minimum-stability": "dev",
+  "prefer-stable": true,
+  "require": {
+    "php": "^7.0",
+    "ext-pdo_mysql": "*",
+    "ext-SimpleXML": "*",
+    "ext-SPL": "*",
+    "ulrichsg/getopt-php": "^3.0"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^6.0"
+  },
+  "extra": {},
+  "authors": [
+    {
+      "name": "Herbert Walde",
+      "email": "herbert.walde@gmail.com"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "Database2Code\\": "src/"
+    }
+  }
+}

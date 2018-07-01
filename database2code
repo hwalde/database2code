@@ -1,0 +1,17 @@
+#!/usr/bin/env php
+<?php
+/*
+ * This file is part of Database2Code.
+ *
+ * (c) Herbert Walde <herbert.walde@gmail.com>
+ *
+ * For the full copyright and license information, read the LICENSE file that was distributed with this source code.
+ */
+if (version_compare('7.0.0', PHP_VERSION, '>')) {
+    die('You need php >= 7.0.0 to run this application. Your version: '.PHP_VERSION);
+}
+
+include_once __DIR__ . '/vendor/autoload.php';
+
+$application = new \Database2Code\Console\Application();
+$application->run();
