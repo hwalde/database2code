@@ -13,9 +13,10 @@
 if(!function_exists('PHPFile__constants__getColumnConstant')) {
     function PHPFile__constants__getColumnConstant(\Database2Code\Struct\Column $column)
     {
+        $constantName = $column->getName()==='from' ? '_'.$column->getName() : $column->getName();
         return <<<END
 
-    const {$column->getName()} = '{$column->getName()}';
+    const {$constantName} = '{$column->getName()}';
 END;
     }
 }
