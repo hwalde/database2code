@@ -28,11 +28,13 @@ class PHPGeneratorTest extends TestCase
         $this->constantsGenerator = new PHPFileGenerator(__DIR__.'/../../../src/Template/PHPFile/constants.php');
     }
 
-    public function testGetterSetterCodeGeneration()
+    public function testGetterSetterCodeGenerationAndPHPVersion7Point0()
     {
         $table = $this->getValidTwoColumnTableStruct();
 
-        $config = new \Database2Code\Output\PHPFile\PHPFileOutputConfig();
+        $config = new \Database2Code\Output\OutputConfig();
+        $config->setPhpVersion('7.0');
+        $config->setNamespace("\\test\\test2");
         $generatedCode = $this->getterAndSetterGenerator->generateFromTable($table, $config);
 
         $this->assertEquals($this->getExpectedGetterSetterSourcecode(), $generatedCode);
@@ -42,8 +44,8 @@ class PHPGeneratorTest extends TestCase
     {
         $table = new \Database2Code\Struct\Table('test_name');
         $table->setColumns([
-            new \Database2Code\Struct\Column('test', new \Database2Code\Struct\ColumnType\StringColumnType('varchar(60)')),
-            new \Database2Code\Struct\Column('test2', new \Database2Code\Struct\ColumnType\IntegerColumnType('varchar(60)', 10))
+            new \Database2Code\Struct\Column('test', new \Database2Code\Struct\ColumnType\StringColumnType('varchar(60)'), false),
+            new \Database2Code\Struct\Column('test2', new \Database2Code\Struct\ColumnType\IntegerColumnType('varchar(60)', 10), true)
         ]);
         return $table;
     }
@@ -52,44 +54,60 @@ class PHPGeneratorTest extends TestCase
         return <<<END
 <?php
 
+namespace \\test\\test2;
+
 class test_name {
     
     /** @var \$test string */
     private \$test;
     
-    /** @var \$test2 int */
+    /** @var \$test2 int|null */
     private \$test2;
-    
+
+    /**
+     * @return string
+     */
     public function getTest() : string
     {
         return \$this->test;
     }
-    
+
+    /**
+     * @param string \$test
+     */
     public function setTest(string \$test)
     {
         \$this->test = \$test;
     }
-    
-    public function getTest2() : int
+
+    /**
+     * @return int|null
+     */
+    public function getTest2()
     {
         return \$this->test2;
     }
-    
-    public function setTest2(int \$test2)
+
+    /**
+     * @param int|null \$test2
+     */
+    public function setTest2(\$test2)
     {
         \$this->test2 = \$test2;
     }
 
 }
 END;
+
     }
 
-    public function testGetterSetterCodeGenerationWithNamespace()
+    public function testGetterSetterCodeGenerationWithNamespaceAndPHP7Point1()
     {
         $table = $this->getValidTwoColumnTableStruct();
 
-        $config = new \Database2Code\Output\PHPFile\PHPFileOutputConfig();
+        $config = new \Database2Code\Output\OutputConfig();
         $config->setNamespace('Hello\\World');
+        $config->setPhpVersion('7.1');
         $generatedCode = $this->getterAndSetterGenerator->generateFromTable($table, $config);
 
         $this->assertEquals($this->getExpectedGetterSetterSourcecodeWithNamespace(), $generatedCode);
@@ -106,25 +124,37 @@ class test_name {
     /** @var \$test string */
     private \$test;
     
-    /** @var \$test2 int */
+    /** @var \$test2 int|null */
     private \$test2;
-    
+
+    /**
+     * @return string
+     */
     public function getTest() : string
     {
         return \$this->test;
     }
-    
+
+    /**
+     * @param string \$test
+     */
     public function setTest(string \$test)
     {
         \$this->test = \$test;
     }
-    
-    public function getTest2() : int
+
+    /**
+     * @return int|null
+     */
+    public function getTest2() : ?int
     {
         return \$this->test2;
     }
-    
-    public function setTest2(int \$test2)
+
+    /**
+     * @param int|null \$test2
+     */
+    public function setTest2(?int \$test2)
     {
         \$this->test2 = \$test2;
     }
@@ -137,7 +167,7 @@ END;
     {
         $table = $this->getValidTwoColumnTableStruct();
 
-        $config = new \Database2Code\Output\PHPFile\PHPFileOutputConfig();
+        $config = new \Database2Code\Output\OutputConfig();
         $generatedCode = $this->staticPropertiesGenerator->generateFromTable($table, $config);
 
         $this->assertEquals($this->getExpectedStaticPropertiesSourcecode(), $generatedCode);
@@ -163,7 +193,7 @@ END;
     {
         $table = $this->getValidTwoColumnTableStruct();
 
-        $config = new \Database2Code\Output\PHPFile\PHPFileOutputConfig();
+        $config = new \Database2Code\Output\OutputConfig();
         $config->setNamespace('Hello\\World');
         $generatedCode = $this->staticPropertiesGenerator->generateFromTable($table, $config);
 
@@ -193,7 +223,7 @@ END;
     {
         $table = $this->getValidTwoColumnTableStruct();
 
-        $config = new \Database2Code\Output\PHPFile\PHPFileOutputConfig();
+        $config = new \Database2Code\Output\OutputConfig();
         $generatedCode = $this->constantsGenerator->generateFromTable($table, $config);
 
         $this->assertEquals($this->getConstantsPropertiesSourcecode(), $generatedCode);
@@ -219,7 +249,7 @@ END;
     {
         $table = $this->getValidTwoColumnTableStruct();
 
-        $config = new \Database2Code\Output\PHPFile\PHPFileOutputConfig();
+        $config = new \Database2Code\Output\OutputConfig();
         $config->setNamespace('Hello\\World');
         $generatedCode = $this->constantsGenerator->generateFromTable($table, $config);
 

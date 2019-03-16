@@ -42,38 +42,41 @@ if(!function_exists('PHPFile__getterAndSetter__getColumnMethods')) {
             $argumentTypeDef = '';
         } else {
             $phpType = $column->getType()->getPHPTypeName();
-            $argumentTypeDef = $phpType.' ';
+
             if($column->isNullable()) {
                 if(version_compare($config->getPhpVersion(), '7.1', '>=')) {
                     $returnTypeDef = ' : ?'.$phpType;
+                    $argumentTypeDef = '?'.$phpType.' ';
                 } else {
                     $returnTypeDef = '';
+                    $argumentTypeDef = '';
                 }
                 $phpType .= '|null';
             } else {
                 $returnTypeDef = ' : '.$phpType;
+                $argumentTypeDef = $phpType.' ';
             }
         }
         $setterPHPDoc = <<<END
-            
+
     /**
-     * @param $phpType \${$name} 
+     * @param $phpType \${$name}
      */
 END;
         $getterPHPDoc = <<<END
-            
+
     /**
      * @return $phpType
      */
 END;
         $upperCaseName = strtoupper($name[0]) . substr($name, 1);
         return <<<END
-    $getterPHPDoc
+$getterPHPDoc
     public function get{$upperCaseName}()$returnTypeDef
     {
         return \$this->$name;
     }
-    $setterPHPDoc
+$setterPHPDoc
     public function set{$upperCaseName}($argumentTypeDef\$$name)
     {
         \$this->$name = \$$name;
