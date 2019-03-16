@@ -45,7 +45,8 @@ class MySQLTableHydrator
         foreach ($rows as $column) {
             $columnName = $this->getColumnName($column);
             $columnType = $this->getColumnType($column);
-            $table->addColumn(new Column($columnName, $columnType));
+            $isNullable = $this->isColumnNullable($column);
+            $table->addColumn(new Column($columnName, $columnType, $isNullable));
         }
     }
 
@@ -58,6 +59,28 @@ class MySQLTableHydrator
             throw new \ErrorException('Missing key "Field" in database-result-row');
         }
         return $column['Field'];
+    }
+
+    /**
+     * @param array $column
+     * @return bool
+     * @throws \ErrorException
+     */
+    private function isColumnNullable(array $column) : bool
+    {
+        if (!isset($column['Null'])) {
+            throw new \ErrorException('Missing key "Null" in database-result-row');
+        }
+        switch (strtoupper($column['Null'])) {
+            case 'YES':
+                return true;
+                break;
+            case 'NO':
+                return false;
+                break;
+            default:
+                throw new \ErrorException('Unknown Null-value "'.$column['Null'].'" in database-result-ro');
+        }
     }
 
     /**

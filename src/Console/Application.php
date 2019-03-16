@@ -156,6 +156,7 @@ class Application
         if (isset($customTemplatePath)) {
             $outputFileConfig->setCustomOutputClassname($customOutputFileGateway);
         }
+        $outputFileConfig->setPhpVersion(PHP_VERSION);
         return $outputFileConfig;
     }
 

@@ -29,6 +29,9 @@ class OutputConfig
     /** @var $customOutputClassname string */
     protected $customOutputClassname;
 
+    /** @var $phpVersion string */
+    protected $phpVersion;
+
     public function hasCustomTemplatePath() : bool
     {
         return isset($this->customTemplatePath);
@@ -94,4 +97,15 @@ class OutputConfig
     {
         return isset($this->namespace);
     }
+
+    public function getPhpVersion(): string
+    {
+        return $this->phpVersion;
+    }
+
+    public function setPhpVersion(string $phpVersion)
+    {
+        $this->phpVersion = $phpVersion;
+    }
+
 }

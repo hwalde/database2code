@@ -18,6 +18,9 @@ if(!function_exists('PHPFile__getterAndSetter__getColumnProperty')) {
         } else {
             $phpType = $column->getType()->getPHPTypeName();
         }
+        if($column->isNullable()) {
+            $phpType .= '|null';
+        }
         return <<<END
     
     /** @var \${$column->getName()} $phpType */
@@ -27,32 +30,42 @@ END;
 }
 
 if(!function_exists('PHPFile__getterAndSetter__getColumnMethods')) {
-    function PHPFile__getterAndSetter__getColumnMethods(\Database2Code\Struct\Column $column)
+    function PHPFile__getterAndSetter__getColumnMethods(\Database2Code\Struct\Column $column, \Database2Code\Output\OutputConfig $config)
     {
         $name = $column->getName();
         if($column->getType() instanceof \Database2Code\Struct\ColumnType\UnknownColumnType) {
             $phpType = 'mixed';
+            if($column->isNullable()) {
+                $phpType .= '|null';
+            }
             $returnTypeDef = '';
             $argumentTypeDef = '';
-            $setterPHPDoc = <<<END
+        } else {
+            $phpType = $column->getType()->getPHPTypeName();
+            $argumentTypeDef = $phpType.' ';
+            if($column->isNullable()) {
+                if(version_compare($config->getPhpVersion(), '7.1', '>=')) {
+                    $returnTypeDef = ' : ?'.$phpType;
+                } else {
+                    $returnTypeDef = '';
+                }
+                $phpType .= '|null';
+            } else {
+                $returnTypeDef = ' : '.$phpType;
+            }
+        }
+        $setterPHPDoc = <<<END
             
     /**
      * @param $phpType \${$name} 
      */
 END;
-            $getterPHPDoc = <<<END
+        $getterPHPDoc = <<<END
             
     /**
      * @return $phpType
      */
 END;
-
-        } else {
-            $phpType = $column->getType()->getPHPTypeName();
-            $returnTypeDef = ' : '.$phpType;
-            $argumentTypeDef = $phpType.' ';
-            $getterPHPDoc = $setterPHPDoc = '';
-        }
         $upperCaseName = strtoupper($name[0]) . substr($name, 1);
         return <<<END
     $getterPHPDoc
@@ -76,7 +89,7 @@ foreach ($table->getColumns() as $column) {
 
 $methods = '';
 foreach ($table->getColumns() as $column) {
-    $methods .= PHPFile__getterAndSetter__getColumnMethods($column).PHP_EOL;
+    $methods .= PHPFile__getterAndSetter__getColumnMethods($column, $config).PHP_EOL;
 }
 
 if($config->hasNamespace()) {

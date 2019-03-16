@@ -25,10 +25,14 @@ class Column
     /** @var $type AbstractColumnType */
     protected $type;
 
-    public function __construct(string $name, AbstractColumnType $type)
+    /** @var $isNullable bool */
+    protected $isNullable;
+
+    public function __construct(string $name, AbstractColumnType $type, bool $isNullable)
     {
         $this->name = $name;
         $this->type = $type;
+        $this->isNullable = $isNullable;
     }
 
     public function getName(): string
@@ -61,4 +65,14 @@ class Column
         $this->type = $type;
     }
 
+    public function isNullable(): bool
+    {
+        return $this->isNullable;
+    }
+
+    public function setIsNullable(bool $isNullable)
+    {
+        $this->isNullable = $isNullable;
+    }
+    
 }
