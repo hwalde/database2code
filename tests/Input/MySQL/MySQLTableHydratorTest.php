@@ -1,7 +1,10 @@
 <?php
-/**
- * @copyright 2018 ixini GmbH
- * @author Herbert Walde <hwalde@ixini.de>
+/*
+ * This file is part of Database2Code.
+ *
+ * (c) Herbert Walde <herbert.walde@gmail.com>
+ *
+ * For the full copyright and license information, read the LICENSE file that was distributed with this source code.
  */
 
 class MySQLTableHydratorTest extends \PHPUnit\Framework\TestCase

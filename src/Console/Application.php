@@ -54,14 +54,19 @@ class Application
         $this->getOpt->addOperand(new \GetOpt\Operand('pathToOutputFolder', \GetOpt\Operand::REQUIRED));
         $this->getOpt->addOperand(new \GetOpt\Operand('database-name', \GetOpt\Operand::REQUIRED));
         $this->getOpt->addOperand(new \GetOpt\Operand('table', \GetOpt\Operand::OPTIONAL));
+    }
 
-        $this->getOpt->process();
+    public function getHelpText() : string
+    {
+        return $this->getOpt->getHelpText();
     }
 
     private function addGetOptDBMSOptions()
     {
         // MySQL Specific options
         $this->getOpt->addOptions([
+            \GetOpt\Option::create('?', 'help', \GetOpt\GetOpt::NO_ARGUMENT)
+                ->setDescription('Print this help text'),
             \GetOpt\Option::create('h', 'mysql-host', \GetOpt\GetOpt::OPTIONAL_ARGUMENT)
                 ->setDescription('MySQL Hostname'),
             \GetOpt\Option::create('u', 'mysql-user', \GetOpt\GetOpt::OPTIONAL_ARGUMENT)
@@ -77,16 +82,49 @@ class Application
         // Add your dbms options here..
     }
 
-    public function run()
+    public function hasSetOptionHelp() : bool
+    {
+        global $argv;
+        return in_array('-?', $argv) || in_array('--help', $argv);
+    }
+
+    public function run() {
+        // Show help text?
+        if($this->hasSetOptionHelp()) {
+            echo $this->getOpt->getHelpText();
+            exit(0);
+        }
+
+        // In case of illegal command line usage we want to render only the error message, and after that the help text:
+        try {
+            $this->getOpt->process();
+        } catch (\Throwable $e) {
+            echo "Error: ".$e->getMessage().PHP_EOL;
+            echo PHP_EOL;
+            echo $this->getHelpText();
+            exit(0);
+        }
+
+        $this->process();
+    }
+
+    private function process()
     {
         $outputGateway = $this->getOutputGateway();
         $service = new ConvertService($outputGateway);
         $dbConfig = $this->getDatabaseConfig();
         $databaseName = $this->getDatabaseName();
+
+
+        if($this->getOpt->getOption("help")) {
+            $this->getHelpText();
+            exit;
+        }
+
         $pathToOutputFolder = $this->getOpt->getOperand('pathToOutputFolder');
         $tableName = $this->getOpt->getOperand('table');
 
-        if(is_null($tableName)) {
+        if($tableName === null) {
             echo 'Converting table "'.$databaseName.'.'.$tableName.'" to output-folder "'.$pathToOutputFolder.'"'.PHP_EOL;
             $service->convertDatabase($dbConfig, $databaseName, $pathToOutputFolder);
         } else {
@@ -173,8 +211,7 @@ class Application
         if (!is_readable($xmlConfigFilepath)) {
             die('Error: xml-config-file "' . $xmlConfigFilepath . '" is not readable!' . PHP_EOL);
         }
-        $xml = simplexml_load_file($xmlConfigFilepath);
-        return $xml;
+        return simplexml_load_string(file_get_contents($xmlConfigFilepath));
     }
 
     private function getDBConfigFromOptions() : InputConfig
@@ -185,19 +222,19 @@ class Application
 
             case 'mysql':
                 $hostname = $this->getOpt->getOption('mysql-host');
-                if(is_null($hostname) || !strlen($hostname)) {
+                if($hostname === null || !strlen($hostname)) {
                     die('Error: DBMS "mysql" requires option "--mysql-host"!'.PHP_EOL);
                 }
                 $username = $this->getOpt->getOption('mysql-user');
-                if(is_null($username) || !strlen($username)) {
+                if($username === null || !strlen($username)) {
                     die('Error: DBMS "mysql" requires option "--mysql-user"!'.PHP_EOL);
                 }
                 $password = $this->getOpt->getOption('mysql-password');
-                if(is_null($password)) {
+                if($password === null) {
                     die('Error: DBMS "mysql" requires option "--mysql-password"!'.PHP_EOL);
                 }
                 $port = $this->getOpt->getOption('mysql-port');
-                if(is_null($port)) {
+                if($port === null) {
                     die('Error: DBMS "mysql" requires option "--mysql-port"!'.PHP_EOL);
                 }
                 return new MySQLInputConfig($username, $password, $hostname, (int)$port);

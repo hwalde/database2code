@@ -11,6 +11,7 @@
 namespace Database2Code\Output\PHPFile;
 
 
+use Database2Code\Output\OutputConfig;
 use Database2Code\Struct\Table;
 
 class PHPFileGenerator
@@ -23,9 +24,9 @@ class PHPFileGenerator
         $this->templateFilepath = $templateFilepath;
     }
 
-    public function generateFromTable(Table $table) : string
+    public function generateFromTable(Table $table, OutputConfig $config) : string
     {
-        // $table ins used in:
+        // $table and $config are used in:
         return include $this->templateFilepath;
     }
 }

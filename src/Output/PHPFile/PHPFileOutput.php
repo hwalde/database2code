@@ -17,21 +17,25 @@ use Database2Code\Struct\Table;
 
 class PHPFileOutput implements Output
 {
-    /** @var $simplePhpGenerator PHPFileGenerator */
-    protected $simplePhpGenerator;
+    /** @var $config OutputConfig */
+    private $config;
 
-    public function __construct(OutputConfig $outputFileConfig)
+    /** @var $generator PHPFileGenerator */
+    private $generator;
+
+    public function __construct(OutputConfig $config)
     {
-        if($outputFileConfig->hasCustomTemplatePath()) {
-            $templateFilepath = $outputFileConfig->getCustomTemplatePath();
+        $this->config = $config;
+        if($config->hasCustomTemplatePath()) {
+            $templateFilepath = $config->getCustomTemplatePath();
         } else {
             $templateFilepath = __DIR__.'/../../Template/PHPFile/getterAndSetter.php';
         }
-        $this->simplePhpGenerator = new PHPFileGenerator($templateFilepath);
+        $this->generator = new PHPFileGenerator($templateFilepath);
     }
 
     public function saveTable(Table $table, string $targetDirectoryPath) {
-        $fileContents = $this->simplePhpGenerator->generateFromTable($table);
+        $fileContents = $this->generator->generateFromTable($table, $this->config);
         $filePath = $this->generateFilepath($targetDirectoryPath, $table->getName());
 
         file_put_contents($filePath, $fileContents);

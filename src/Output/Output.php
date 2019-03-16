@@ -16,7 +16,5 @@ use Database2Code\Struct\Table;
 
 interface Output
 {
-    public function __construct(OutputConfig $outputFileConfig);
-
     public function saveTable(Table $table, string $targetFolderPath);
 }

@@ -20,6 +20,8 @@ namespace Database2Code\Output;
  */
 class OutputConfig
 {
+    /** @var $namespace string */
+    private $namespace;
 
     /** @var $customTemplatePath string */
     protected $customTemplatePath;
@@ -76,5 +78,20 @@ class OutputConfig
         if (!is_readable($customTemplatePath)) {
             throw new \Error('Template file "' . $customTemplatePath . '" is not readabke!');
         }
+    }
+
+    public function getNamespace(): string
+    {
+        return $this->namespace;
+    }
+
+    public function setNamespace(string $namespace)
+    {
+        $this->namespace = $namespace;
+    }
+
+    public function hasNamespace() : bool
+    {
+        return isset($this->namespace);
     }
 }

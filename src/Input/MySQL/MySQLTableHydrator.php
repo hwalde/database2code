@@ -22,16 +22,27 @@ use Database2Code\Struct\Table;
 
 class MySQLTableHydrator
 {
-    public function hydrate(string $tableName, array $data) : Table
+    /**
+     * @param string $tableName
+     * @param array $rows Database rows
+     * @return Table
+     * @throws \ErrorException
+     */
+    public function hydrate(string $tableName, array $rows) : Table
     {
        $table = new Table($tableName);
-       $this->addColumns($table, $data);
+       $this->addColumns($table, $rows);
        return $table;
     }
 
-    private function addColumns(Table $table, array $data)
+    /**
+     * @param Table $table Object to hydrate
+     * @param array $rows Database rows
+     * @throws \ErrorException
+     */
+    private function addColumns(Table $table, array $rows)
     {
-        foreach ($data as $column) {
+        foreach ($rows as $column) {
             $columnName = $this->getColumnName($column);
             $columnType = $this->getColumnType($column);
             $table->addColumn(new Column($columnName, $columnType));
@@ -49,6 +60,11 @@ class MySQLTableHydrator
         return $column['Field'];
     }
 
+    /**
+     * @param array $column
+     * @return AbstractColumnType
+     * @throws \ErrorException
+     */
     private function getColumnType(array $column) : AbstractColumnType
     {
         if (!isset($column['Type'])) {
@@ -84,17 +100,13 @@ class MySQLTableHydrator
             case 'int':
             case 'mediumint':
             case 'tinyint':
+            case 'smallint':
+            case 'bigint':
                 /*
-tinyint(size)
-smallint(size)
-mediumint(size)
-int(size)
-bigint(size)
 float(size,d)
 double(size,d)
 decimal(size,d)
                  */
-            //case '':
                 $columnType = new IntegerColumnType($mysqlTypeDefinition, $typeLength);
                 break;
             case 'varchar': // has size
@@ -117,8 +129,6 @@ decimal(size,d)
                 $columnType = new DatetimeColumnType($mysqlTypeDefinition);
                 break;
                 /*
-date()
-datetime()
 timestamp()
 time()
 year()

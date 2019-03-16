@@ -6,12 +6,12 @@
  *
  * For the full copyright and license information, read the LICENSE file that was distributed with this source code.
  */
-/**
- * @var $table \Database2Code\Struct\Table
- */
 
-if(!function_exists('getterAndSetter__getColumnProperty')) {
-    function getterAndSetter__getColumnProperty(\Database2Code\Struct\Column $column)
+/** @var $table \Database2Code\Struct\Table */
+/** @var $config \Database2Code\Output\OutputConfig */
+
+if(!function_exists('PHPFile__getterAndSetter__getColumnProperty')) {
+    function PHPFile__getterAndSetter__getColumnProperty(\Database2Code\Struct\Column $column)
     {
         if($column->getType() instanceof \Database2Code\Struct\ColumnType\UnknownColumnType) {
             $phpType = 'mixed';
@@ -26,8 +26,8 @@ END;
     }
 }
 
-if(!function_exists('getterAndSetter__getColumnMethods')) {
-    function getterAndSetter__getColumnMethods(\Database2Code\Struct\Column $column)
+if(!function_exists('PHPFile__getterAndSetter__getColumnMethods')) {
+    function PHPFile__getterAndSetter__getColumnMethods(\Database2Code\Struct\Column $column)
     {
         $name = $column->getName();
         if($column->getType() instanceof \Database2Code\Struct\ColumnType\UnknownColumnType) {
@@ -71,17 +71,23 @@ END;
 
 $properties = '';
 foreach ($table->getColumns() as $column) {
-    $properties .= getterAndSetter__getColumnProperty($column).PHP_EOL;
+    $properties .= PHPFile__getterAndSetter__getColumnProperty($column).PHP_EOL;
 }
 
 $methods = '';
 foreach ($table->getColumns() as $column) {
-    $methods .= getterAndSetter__getColumnMethods($column).PHP_EOL;
+    $methods .= PHPFile__getterAndSetter__getColumnMethods($column).PHP_EOL;
+}
+
+if($config->hasNamespace()) {
+    $namespace = "\nnamespace {$config->getNamespace()};\n";
+} else {
+    $namespace = '';
 }
 
 return <<<END
 <?php
-
+$namespace
 class {$table->getName()} {
 $properties$methods
 }
