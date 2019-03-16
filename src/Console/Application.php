@@ -133,12 +133,12 @@ class Application
         $pathToOutputFolder = $this->getOpt->getOperand('pathToOutputFolder');
         $tableName = $this->getOpt->getOperand('table');
 
-        if($tableName === null) {
+        if($tableName !== null) {
             echo 'Converting table "'.$databaseName.'.'.$tableName.'" to output-folder "'.$pathToOutputFolder.'"'.PHP_EOL;
-            $service->convertDatabase($dbConfig, $databaseName, $pathToOutputFolder);
+            $service->convertTable($dbConfig, $databaseName, $tableName, $pathToOutputFolder);
         } else {
             echo 'Converting database "'.$databaseName.'" to output-folder "'.$pathToOutputFolder.'"'.PHP_EOL;
-            $service->convertTable($dbConfig, $databaseName, $tableName, $pathToOutputFolder);
+            $service->convertDatabase($dbConfig, $databaseName, $pathToOutputFolder);
         }
     }
 
