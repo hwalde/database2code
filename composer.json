@@ -17,7 +17,6 @@
   "require-dev": {
     "phpunit/phpunit": "^6.0"
   },
-  "extra": {},
   "authors": [
     {
       "name": "Herbert Walde",
@@ -27,6 +26,26 @@
   "autoload": {
     "psr-4": {
       "Database2Code\\": "src/"
+    }
+  },
+  "extra": {
+    "phar-builder": {
+      "compression": "GZip",
+      "name": "database2code.phar",
+      "output-dir": "../",
+      "entry-point": "./database2code",
+      "include": [
+        "src",
+        "vendor"
+      ],
+      "include-dev": false,
+      "events": {
+        "command.build.start": "git describe --tags > bin/version.txt",
+        "command.build.end": [
+          "rm bin/version.txt",
+          "chmod +x ../database2code.phar"
+        ]
+      }
     }
   }
 }

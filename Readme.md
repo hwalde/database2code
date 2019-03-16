@@ -21,7 +21,20 @@ You can use it either as command line program or use the PHP API.
 
 ## Installation
 
-Use [Composer](https://getcomposer.org/) to download and install Database2Code. 
+### Installation PHP Archive (PHAR)
+
+We distribute a [PHP Archive (PHAR)](https://php.net/phar) file.
+
+You can download and use the database2code.phar file [here](https://github.com/hwalde/database2code/releases).
+
+```bash
+$ php database2code.phar --help
+```
+
+
+### Using Composer
+
+Alternatively, you may use [Composer](https://getcomposer.org/) to download and install Database2Code.
 
 ```bash
 $ composer require hwalde/database2code
@@ -33,7 +46,7 @@ $ composer require hwalde/database2code
 
 Convert all tables of a database:
 ```bash
-$ php database2code \ 
+$ php database2code \
     --dbms='mysql' \
     --mysql-host='localhost' \
     --mysql-user='username' \ 
@@ -43,7 +56,7 @@ $ php database2code \
 
 Convert only one table:
 ```bash
-$ php database2code \ 
+$ php database2code \
     --dbms='mysql' \
     --mysql-host='localhost' \
     --mysql-user='username' \ 
