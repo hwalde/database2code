@@ -61,6 +61,10 @@ $ php database2code \
 
 ```--xml-config-file [filePath]``` Read database config from an xml file
 
+```--output-phpversion [version]``` PHP version the code will be created for. Used in some output-templates. (Default: version of the executing interpreter)
+
+```--output-namespace [namespace]``` Namespace information. Used in some output-templates.
+
 #### XML database configuration
 
 Instead of using the command line options to set database entries you can read them from an xml file instead.
@@ -94,7 +98,7 @@ $outputConfig->setCustomTemplatePath('Template/PHPFile/getterAndSetter.php');
 // The required argument is the fully qualified classname to your output-class:
 $outputConfig->setCustomOutputClassname(MyOutputOutput::class);
 
-$output = new \Database2Code\Output\PHPFile\PHPFileOutput($outputConfig);
+$output = new \Database2Code\Output\OutputConfig($outputConfig);
 $service = new \Database2Code\Service\ConvertService($output);
 
 $inputConfig = new \Database2Code\Input\MySQL\MySQLInputConfig('username', 'password', 'hostname');

@@ -63,10 +63,12 @@ class Application
 
     private function addGetOptDBMSOptions()
     {
-        // MySQL Specific options
         $this->getOpt->addOptions([
+            // General options:
             \GetOpt\Option::create('?', 'help', \GetOpt\GetOpt::NO_ARGUMENT)
                 ->setDescription('Print this help text'),
+
+            // MySQL Specific options
             \GetOpt\Option::create('h', 'mysql-host', \GetOpt\GetOpt::OPTIONAL_ARGUMENT)
                 ->setDescription('MySQL Hostname'),
             \GetOpt\Option::create('u', 'mysql-user', \GetOpt\GetOpt::OPTIONAL_ARGUMENT)
@@ -76,7 +78,14 @@ class Application
             \GetOpt\Option::create(null, 'mysql-port', \GetOpt\GetOpt::OPTIONAL_ARGUMENT)
                 ->setDescription('MySQL Port')
                 ->setDefaultValue(3306)
-                ->setValidation('is_numeric')
+                ->setValidation('is_numeric'),
+
+            // Output related options
+            \GetOpt\Option::create(null, 'output-phpversion', \GetOpt\GetOpt::OPTIONAL_ARGUMENT)
+                ->setDescription('PHP-Version to use in output (used in php templates)')
+                ->setDefaultValue(PHP_VERSION),
+            \GetOpt\Option::create(null, 'output-namespace', \GetOpt\GetOpt::OPTIONAL_ARGUMENT)
+                ->setDescription('Namespace to use in output (used in php templates)')
         ]);
 
         // Add your dbms options here..
@@ -148,15 +157,25 @@ class Application
     private function getOutputConfigFile(): OutputConfig
     {
         $outputFileConfig = new OutputConfig();
+
         $customTemplatePath = $this->getOpt->getOption('customTemplate');
         if (isset($customTemplatePath)) {
             $outputFileConfig->setCustomTemplatePath($customTemplatePath);
         }
+
         $customOutputFileGateway = $this->getOpt->getOption('customOutputFileGateway');
-        if (isset($customTemplatePath)) {
+        if (isset($customOutputFileGateway)) {
             $outputFileConfig->setCustomOutputClassname($customOutputFileGateway);
         }
-        $outputFileConfig->setPhpVersion(PHP_VERSION);
+
+        $outputPHPVersion = $this->getOpt->getOption('output-phpversion');
+        $outputFileConfig->setPhpVersion($outputPHPVersion);
+
+        $outputNamespace = $this->getOpt->getOption('output-namespace');
+        if (isset($outputNamespace)) {
+            $outputFileConfig->setNamespace($outputNamespace);
+        }
+
         return $outputFileConfig;
     }
 
