@@ -46,7 +46,8 @@ class MySQLTableHydrator
             $columnName = $this->getColumnName($column);
             $columnType = $this->getColumnType($column);
             $isNullable = $this->isColumnNullable($column);
-            $table->addColumn(new Column($columnName, $columnType, $isNullable));
+            $isPartOfPrimaryKey = $this->isColumnPartOfPrimaryKey($column);
+            $table->addColumn(new Column($columnName, $columnType, $isNullable, $isPartOfPrimaryKey));
         }
     }
 
@@ -160,5 +161,13 @@ year()
                 $columnType = new UnknownColumnType($mysqlTypeDefinition);
         }
         return $columnType;
+    }
+
+    private function isColumnPartOfPrimaryKey($column)
+    {
+        if (!isset($column['Key'])) {
+            throw new \ErrorException('Missing key "Key" in database-result-row');
+        }
+        return $column['Key']=='PRI';
     }
 }

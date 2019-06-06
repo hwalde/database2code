@@ -13,11 +13,10 @@ namespace Database2Code\Struct;
 
 class Table
 {
-
     /** @var $name string */
     protected $name;
 
-    /** @var $columns array */
+    /** @var $columns Column[] */
     protected $columns;
 
     public function __construct($name)
@@ -54,6 +53,25 @@ class Table
 
     public function addColumn(Column $column) {
         $this->columns[] = $column;
+    }
+
+    public function containsPrimaryKey() : bool
+    {
+        return count($this->getPrimaryKeyColumnList()) === 0;
+    }
+
+    /**
+     * @return Column[]
+     */
+    public function getPrimaryKeyColumnList(): array
+    {
+        $list = [];
+        foreach ($this->columns as $column) {
+            if($column->isPartOfPrimaryKey()) {
+                $list[] = $column;
+            }
+        }
+        return $list;
     }
 
 }

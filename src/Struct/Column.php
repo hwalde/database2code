@@ -15,7 +15,6 @@ use Database2Code\Struct\ColumnType\AbstractColumnType;
 
 class Column
 {
-
     /** @var string $name */
     protected $name;
 
@@ -28,11 +27,15 @@ class Column
     /** @var $isNullable bool */
     protected $isNullable;
 
-    public function __construct(string $name, AbstractColumnType $type, bool $isNullable)
+    /** @var $isPartOfPrimaryKey bool */
+    protected $isPartOfPrimaryKey;
+
+    public function __construct(string $name, AbstractColumnType $type, bool $isNullable, $isPartOfPrimaryKey)
     {
         $this->name = $name;
         $this->type = $type;
         $this->isNullable = $isNullable;
+        $this->isPartOfPrimaryKey = $isPartOfPrimaryKey;
     }
 
     public function getName(): string
@@ -74,5 +77,14 @@ class Column
     {
         $this->isNullable = $isNullable;
     }
-    
+
+    public function isPartOfPrimaryKey(): bool
+    {
+        return $this->isPartOfPrimaryKey;
+    }
+
+    public function setIsPartOfPrimaryKey(bool $isPartOfPrimaryKey): void
+    {
+        $this->isPartOfPrimaryKey = $isPartOfPrimaryKey;
+    }
 }
