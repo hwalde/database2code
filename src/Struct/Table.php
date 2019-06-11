@@ -57,7 +57,7 @@ class Table
 
     public function containsPrimaryKey() : bool
     {
-        return count($this->getPrimaryKeyColumnList()) === 0;
+        return count($this->getPrimaryKeyColumnList()) > 0;
     }
 
     /**
