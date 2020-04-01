@@ -45,7 +45,7 @@ class MySQLInput implements \Database2Code\Input\Input
     private function createPDOInstance(MySQLInputConfig $config, string $databaseName): \PDO
     {
         $dns = 'mysql:host=' . $config->getHostname() . ':' . $config->getPort() . ';dbname=' . $databaseName;
-        return new \PDO($dns, $config->getUsername(), $config->getPassword());
+        return new \PDO($dns, $config->getUsername(), $config->getPassword(), $config->getPdoOptions());
     }
 
     /**

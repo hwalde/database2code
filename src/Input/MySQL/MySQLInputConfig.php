@@ -15,25 +15,32 @@ use Database2Code\Input\InputConfig;
 
 class MySQLInputConfig implements InputConfig
 {
-
     /** @var $username string */
-    protected $username;
+    private $username;
 
     /** @var $password string */
-    protected $password;
+    private $password;
 
     /** @var $hostname string */
-    protected $hostname;
+    private $hostname;
 
     /** @var $port int */
-    protected $port;
+    private $port;
 
-    public function __construct(string $username, string $password, string $hostname = 'localhost', $port = 3306)
+    /** @var array|null */
+    private $pdoOptions;
+
+    public function __construct(string $username,
+                                string $password,
+                                string $hostname = 'localhost',
+                                $port = 3306,
+                                $pdoOptions = null)
     {
         $this->username = $username;
         $this->password = $password;
         $this->hostname = $hostname;
         $this->port = $port;
+        $this->pdoOptions = $pdoOptions;
     }
 
     public function getUsername(): string
@@ -76,4 +83,13 @@ class MySQLInputConfig implements InputConfig
         $this->port = $port;
     }
 
+    public function getPdoOptions(): ?array
+    {
+        return $this->pdoOptions;
+    }
+
+    public function setPdoOptions(?array $pdoOptions): void
+    {
+        $this->pdoOptions = $pdoOptions;
+    }
 }
