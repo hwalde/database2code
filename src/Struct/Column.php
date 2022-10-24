@@ -30,7 +30,7 @@ class Column
     /** @var $isPartOfPrimaryKey bool */
     protected $isPartOfPrimaryKey;
 
-    public function __construct(string $name, AbstractColumnType $type, bool $isNullable, $isPartOfPrimaryKey)
+    public function __construct(string $name, AbstractColumnType $type, bool $isNullable, bool $isPartOfPrimaryKey = false)
     {
         $this->name = $name;
         $this->type = $type;

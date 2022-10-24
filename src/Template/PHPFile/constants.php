@@ -27,7 +27,7 @@ foreach ($table->getColumns() as $column) {
 }
 
 if($config->hasNamespace()) {
-    $namespace = "\nnamespace {$config->getNamespace()};\n";
+    $namespace = "\r\nnamespace {$config->getNamespace()};\r\n";
 } else {
     $namespace = '';
 }

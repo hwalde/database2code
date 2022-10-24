@@ -21,7 +21,7 @@ class MySQLTableHydratorTest extends \PHPUnit\Framework\TestCase
         ]);
         $this->assertInstanceOf(\Database2Code\Struct\Table::class, $table);
         $this->assertEquals('testtable', $table->getName());
-        $this->assertInternalType('array', $table->getColumns());
+        $this->assertIsArray($table->getColumns());
         $this->assertEquals(4, count($table->getColumns()));
 
         /** @var $column1 \Database2Code\Struct\Column */

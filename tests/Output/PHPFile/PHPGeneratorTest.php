@@ -21,7 +21,7 @@ class PHPGeneratorTest extends TestCase
     /** @var $constantsGenerator PHPFileGenerator */
     private $constantsGenerator;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->getterAndSetterGenerator = new PHPFileGenerator(__DIR__.'/../../../src/Template/PHPFile/getterAndSetter.php');
         $this->staticPropertiesGenerator = new PHPFileGenerator(__DIR__.'/../../../src/Template/PHPFile/staticProperties.php');

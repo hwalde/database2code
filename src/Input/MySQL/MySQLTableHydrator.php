@@ -75,10 +75,8 @@ class MySQLTableHydrator
         switch (strtoupper($column['Null'])) {
             case 'YES':
                 return true;
-                break;
             case 'NO':
                 return false;
-                break;
             default:
                 throw new \ErrorException('Unknown Null-value "'.$column['Null'].'" in database-result-ro');
         }
@@ -166,7 +164,7 @@ year()
     private function isColumnPartOfPrimaryKey($column)
     {
         if (!isset($column['Key'])) {
-            throw new \ErrorException('Missing key "Key" in database-result-row');
+            return false;
         }
         return $column['Key']=='PRI';
     }
